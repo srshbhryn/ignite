@@ -1,0 +1,5 @@
+services:
+  ignite:
+    image: apacheignite/ignite:2.16.0-jdk11-s390x
+    ports:
+      - 10855:10800
