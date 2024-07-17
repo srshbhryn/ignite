@@ -1,5 +1,9 @@
 services:
   ignite:
-    image: apacheignite/ignite:2.16.0-jdk11-s390x
+    image: apacheignite/ignite:2.16.0
+    environment:
+      - CONFIG_URI=/config.xml
     ports:
       - 10855:10800
+    volumes:
+      - ./test-config/config.xml:/config.xml
