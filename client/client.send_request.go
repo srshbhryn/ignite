@@ -34,18 +34,19 @@ func (c *Client) sendRequest(opCode int16, payload *bytes.Buffer) (*bytes.Buffer
 	}
 	var receivedRequestId int64
 	if err := binary.Read(c.conn, binary.LittleEndian, &receivedRequestId); err != nil {
-		return nil, errors.New("unexpected request id")
+		return nil, errors.New("failed to read request id")
 	}
 	var statusCode int32
 	if err := binary.Read(c.conn, binary.LittleEndian, &statusCode); err != nil {
-		return nil, errors.New("unexpected request id")
+		return nil, errors.New("failed to read status code")
 	}
 	if statusCode != 0 {
-		var errorsMessage string
-		if err := binary.Read(c.conn, binary.LittleEndian, &errorsMessage); err != nil {
-			return nil, errors.New("failed to read error message")
+		var errorsMessage = make([]byte, payloadLength-8-4)
+		if err := binary.Read(c.conn, binary.LittleEndian, errorsMessage); err != nil {
+			return nil, err
 		}
-		return nil, fmt.Errorf("request failed: %s", errorsMessage)
+
+		return nil, fmt.Errorf("request failed: %s", string(errorsMessage))
 	}
 	responseBuffer := &bytes.Buffer{}
 	responsePayload := make([]byte, payloadLength-12)
