@@ -4,14 +4,24 @@ import (
 	"encoding/binary"
 	"errors"
 	"io"
+	"reflect"
 )
 
+var ErrInvalidTypeToWrite = errors.New("invalid type to write")
+
 func Write(writer io.Writer, data any) error {
-	switch data.(type) {
+	if data == nil {
+		return ErrInvalidTypeToWrite
+	}
+	if v := reflect.ValueOf(data); v.Kind() == reflect.Ptr {
+		data = v.Elem().Interface()
+	}
+
+	switch data := data.(type) {
 	case string:
-		return writeString(writer, data.(string))
+		return writeString(writer, data)
 	default:
-		return errors.New("invalid type to write")
+		return ErrInvalidTypeToWrite
 	}
 }
 
