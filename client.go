@@ -1,9 +1,8 @@
-package client
+package ignite
 
 import (
 	"crypto/tls"
 	"fmt"
-	"ignite/types"
 	"net"
 	"sync"
 )
@@ -12,6 +11,12 @@ const _NETWORK = "tcp"
 const _BINARY_PROTO_VERSION_MAJOR = int16(1)
 const _BINARY_PROTO_VERSION_MINOR = int16(1)
 const _BINARY_PROTO_VERSION_PATCH = int16(0)
+
+type ConnectionOpts struct {
+	Host      string
+	Port      int
+	TLSConfig *tls.Config
+}
 
 type Client struct {
 	username string
@@ -27,7 +32,7 @@ func NewClient(username string, password string) *Client {
 	}
 }
 
-func (c *Client) Connect(opts *types.ConnectionOpts) error {
+func (c *Client) Connect(opts *ConnectionOpts) error {
 	err := c.createConnection(opts)
 	if err != nil {
 		return err
@@ -35,7 +40,7 @@ func (c *Client) Connect(opts *types.ConnectionOpts) error {
 	return c.doHandShake()
 }
 
-func (c *Client) createConnection(opts *types.ConnectionOpts) error {
+func (c *Client) createConnection(opts *ConnectionOpts) error {
 	address := fmt.Sprintf("%s:%d", opts.Host, opts.Port)
 	var conn net.Conn
 	var err error

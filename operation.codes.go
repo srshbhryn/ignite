@@ -1,4 +1,4 @@
-package client
+package ignite
 
 const (
 	_OP_CACHE_GET                        = int16(1000)

@@ -1,9 +1,9 @@
-package client
+package ignite
 
 import (
 	"bytes"
 	"encoding/binary"
-	"ignite/client/datatypes"
+	"ignite/datatypes"
 	"time"
 )
 

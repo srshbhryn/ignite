@@ -1,4 +1,4 @@
-package client
+package ignite
 
 func hashCode(bytes []byte) int32 {
 	if len(bytes) == 0 {

@@ -1,10 +1,10 @@
-package client
+package ignite
 
 import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"ignite/client/datatypes"
+	"ignite/datatypes"
 )
 
 func (c *Client) doHandShake() error {

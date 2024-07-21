@@ -1,8 +1,7 @@
-package client_test
+package ignite_test
 
 import (
 	"ignite"
-	"ignite/client"
 	"testing"
 	"time"
 
@@ -11,7 +10,7 @@ import (
 )
 
 func Test_Connect(t *testing.T) {
-	c := client.NewClient("ignite", "ignite")
+	c := ignite.NewClient("ignite", "ignite")
 	err := c.Connect(&ignite.ConnectionOpts{
 		Host: "127.0.0.1",
 		Port: 10855,
@@ -23,7 +22,7 @@ func Test_Connect(t *testing.T) {
 
 func Test_Get_Put(t *testing.T) {
 
-	c := client.NewClient("ignite", "ignite")
+	c := ignite.NewClient("ignite", "ignite")
 	err := c.Connect(&ignite.ConnectionOpts{
 		Host: "127.0.0.1",
 		Port: 10855,
@@ -32,7 +31,7 @@ func Test_Get_Put(t *testing.T) {
 		t.Error(err)
 	}
 	_, err = c.Get("default", "test_key")
-	if err != client.ErrDoesNotExists {
+	if err != ignite.ErrDoesNotExists {
 		t.Error(err)
 	}
 	err = c.Put("default", "test_key", "test_value")
@@ -61,7 +60,7 @@ func Test_SQL(t *testing.T) {
 		isDead      bool
 	}
 
-	c := client.NewClient("ignitea", "ignite")
+	c := ignite.NewClient("ignitea", "ignite")
 	err := c.Connect(&ignite.ConnectionOpts{
 		Host: "127.0.0.1",
 		Port: 10855,
@@ -80,7 +79,7 @@ func Test_SQL(t *testing.T) {
 		doubleValue: 123.512,
 		isDead:      false,
 	}
-	_, err = c.QuerySqlFields("default", &client.QueryFieldsRequest{
+	_, err = c.QuerySqlFields("default", &ignite.QueryFieldsRequest{
 		Schema: "default",
 		Statement: "INSERT INTO Person(_key, id, orgId, groupId, name, createdAt, " +
 			"salary, " +
@@ -92,12 +91,12 @@ func Test_SQL(t *testing.T) {
 		MaxRows:  100,
 		PageSize: 100,
 		Timeout:  100,
-		Type:     client.ANY,
+		Type:     ignite.ANY,
 	})
 	if err != nil {
 		t.Fail()
 	}
-	result, err := c.QuerySqlFields("default", &client.QueryFieldsRequest{
+	result, err := c.QuerySqlFields("default", &ignite.QueryFieldsRequest{
 		Schema: "default",
 		Statement: "Select id, orgId, groupId, name, createdAt," +
 			" salary," +
@@ -106,7 +105,7 @@ func Test_SQL(t *testing.T) {
 		MaxRows:  100,
 		PageSize: 100,
 		Timeout:  100,
-		Type:     client.SELECT,
+		Type:     ignite.SELECT,
 	})
 	if err != nil {
 		t.Fail()
