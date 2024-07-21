@@ -135,11 +135,7 @@ func writeTimestamp(writer io.Writer, value time.Time) error {
 }
 
 func writeDecimal(writer io.Writer, value decimal.Decimal) error {
-	scale := value.Exponent()
-	signByte := byte(0)
-	if value.IsNegative() {
-		signByte = byte(1)
-	}
+	scale := -value.Exponent()
 	if err := binary.Write(writer, binary.LittleEndian, _DECIMAL); err != nil {
 		return err
 	}
@@ -147,11 +143,19 @@ func writeDecimal(writer io.Writer, value decimal.Decimal) error {
 		return err
 	}
 	intPartBytes := value.Mul(decimal.NewFromFloat(math.Pow10(int(scale)))).BigInt().Bytes()
-	intPartLen := int32(len(intPartBytes) + 1)
-	if err := binary.Write(writer, binary.LittleEndian, &intPartLen); err != nil {
-		return err
+	if value.IsNegative() {
+		if intPartBytes[0] < 128 {
+			intPartBytes[0] += 128
+		} else {
+			intPartBytes = append([]byte{128}, intPartBytes...)
+		}
+	} else {
+		if intPartBytes[0] >= 128 {
+			intPartBytes = append([]byte{0}, intPartBytes...)
+		}
 	}
-	if err := binary.Write(writer, binary.LittleEndian, &signByte); err != nil {
+	intPartLen := int32(len(intPartBytes))
+	if err := binary.Write(writer, binary.LittleEndian, &intPartLen); err != nil {
 		return err
 	}
 	if _, err := writer.Write(intPartBytes); err != nil {

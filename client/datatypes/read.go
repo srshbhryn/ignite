@@ -128,18 +128,19 @@ func readDecimal(reader io.Reader) (decimal.Decimal, error) {
 	if err := binary.Read(reader, binary.LittleEndian, &intPartLen); err != nil {
 		return decimal.Decimal{}, err
 	}
-	var signByte byte
-	if err := binary.Read(reader, binary.LittleEndian, &signByte); err != nil {
-		return decimal.Decimal{}, err
-	}
-	intPartBytes := make([]byte, intPartLen-1)
+	intPartBytes := make([]byte, intPartLen)
 	if err := binary.Read(reader, binary.BigEndian, intPartBytes); err != nil {
 		return decimal.Decimal{}, err
 	}
-	intPart := big.NewInt(0).SetBytes(intPartBytes)
-	if signByte == byte(1) {
-		intPart = intPart.Neg(intPart)
+	isNegative := false
+	if intPartBytes[0] >= 128 {
+		isNegative = true
+		intPartBytes[0] -= 128
 	}
-	decimalValue := decimal.NewFromBigInt(intPart, scale)
+	intPart := big.NewInt(0).SetBytes(intPartBytes)
+	if isNegative {
+		intPart.Neg(intPart)
+	}
+	decimalValue := decimal.NewFromBigInt(intPart, -scale)
 	return decimalValue, nil
 }
