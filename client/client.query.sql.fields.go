@@ -30,7 +30,7 @@ type QueryFieldsResult struct {
 	ColumnsCount int32
 	RowsCount    int32
 	Rows         [][]any
-	IsLastPage   bool
+	HasMore      bool
 }
 
 func (c *Client) QuerySqlFields(cacheName string, request *QueryFieldsRequest) (*QueryFieldsResult, error) {
@@ -117,7 +117,7 @@ func (c *Client) QuerySqlFields(cacheName string, request *QueryFieldsRequest) (
 			result.Rows[i][j] = value
 		}
 	}
-	if err := binary.Read(responsePayload, binary.LittleEndian, &result.IsLastPage); err != nil {
+	if err := binary.Read(responsePayload, binary.LittleEndian, &result.HasMore); err != nil {
 		return nil, err
 	}
 	return result, nil
