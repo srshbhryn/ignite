@@ -140,6 +140,9 @@ func writeDecimal(writer io.Writer, value decimal.Decimal) error {
 	if value.IsNegative() {
 		signByte = byte(1)
 	}
+	if err := binary.Write(writer, binary.LittleEndian, _DECIMAL); err != nil {
+		return err
+	}
 	if err := binary.Write(writer, binary.LittleEndian, scale); err != nil {
 		return err
 	}
