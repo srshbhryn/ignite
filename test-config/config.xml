@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util" xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util
@@ -12,13 +11,44 @@
     <bean id="ignite.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
         <property name="cacheConfiguration">
             <list>
-              <bean class="org.apache.ignite.configuration.CacheConfiguration">
-                  <property name="name" value="default"/>
-                  <property name="cacheMode" value="PARTITIONED"/>
-                  <property name="atomicityMode" value="ATOMIC"/>
-                  <property name="backups" value="1"/>
-              </bean>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="default"/>
+                    <!-- <property name="cacheMode" value="PARTITIONED"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/> -->
+                    <property name="queryEntities">
+                        <list>
+                            <bean class="org.apache.ignite.cache.QueryEntity">
+                                <property name="keyType" value="java.lang.Long"/>
+                                <property name="valueType" value="Person"/>
+                                <property name="fields">
+                                    <map>
+                                        <entry key="id" value="java.lang.Long"/>
+                                        <entry key="orgId" value="java.lang.Short"/>
+                                        <entry key="groupId" value="java.lang.Integer"/>
+                                        <entry key="name" value="java.lang.String"/>
+                                        <entry key="createdAt" value="java.sql.Timestamp"/>
+                                        <entry key="salary" value="java.math.BigDecimal"/>
+                                        <entry key="floatValue" value="java.lang.Float"/>
+                                        <entry key="doubleValue" value="java.lang.Double"/>
+                                        <entry key="isDead" value="java.lang.Boolean"/>
+                                    </map>
+                                </property>
+
+                                <property name="indexes">
+                                    <list>
+                                        <bean class="org.apache.ignite.cache.QueryIndex">
+                                            <constructor-arg value="id"/>
+                                        </bean>
+                                    </list>
+                                </property>
+                            </bean>
+                        </list>
+                    </property>
+
+                </bean>
             </list>
         </property>
+
     </bean>
 </beans>
