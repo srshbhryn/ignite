@@ -1,7 +1,7 @@
 package ignite_test
 
 import (
-	"ignite"
+	"github.com/srshbhryn/ignite"
 	"testing"
 	"time"
 

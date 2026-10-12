@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"ignite/datatypes"
+	"github.com/srshbhryn/ignite/datatypes"
 )
 
 func (c *Client) doHandShake() error {

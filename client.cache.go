@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"ignite/datatypes"
+	"github.com/srshbhryn/ignite/datatypes"
 )
 
 var ErrDoesNotExists = errors.New("entry does not exists")

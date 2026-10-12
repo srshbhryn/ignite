@@ -29,11 +29,12 @@ no JDBC/ODBC bridge.
 ## Installation
 
 ```bash
-go get ignite
+go get github.com/srshbhryn/ignite
 ```
 
-> The module is named `ignite` (see [go.mod](go.mod)). Adjust the import path if
-> you publish it under a hosted module path.
+```go
+import "github.com/srshbhryn/ignite"
+```
 
 ## Usage
 

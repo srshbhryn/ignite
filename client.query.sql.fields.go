@@ -3,7 +3,7 @@ package ignite
 import (
 	"bytes"
 	"encoding/binary"
-	"ignite/datatypes"
+	"github.com/srshbhryn/ignite/datatypes"
 	"time"
 )
 
